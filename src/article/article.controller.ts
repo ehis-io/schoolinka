@@ -12,7 +12,7 @@ import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { JwtAuthGuard } from 'src/authentication/guards/jwt.auth.guard';
-@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)
 @Controller('article')
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
