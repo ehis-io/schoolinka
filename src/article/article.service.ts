@@ -10,8 +10,13 @@ export class ArticleService {
     return await this.articleRepository.createArticle(createArticleDto);
   }
 
-  async findAll() {
-    return await this.articleRepository.findAll();
+  async findAll(take?: number, skip?: number) {
+    if (take == null || undefined) {
+      take = 20;
+      skip = 0;
+    }
+    console.log(take, skip);
+    return await this.articleRepository.findAll(take, skip);
   }
 
   async findOne(id: string) {

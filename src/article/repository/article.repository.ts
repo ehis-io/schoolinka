@@ -14,8 +14,11 @@ export class ArticleRepository extends Repository<Article> {
     return await this.save(payload);
   }
 
-  async findAll() {
-    const articles = await this.createQueryBuilder('user').getMany();
+  async findAll(take?: number, skip?: number) {
+    const articles = await this.createQueryBuilder('article')
+      .take(take)
+      .skip(skip)
+      .getManyAndCount();
 
     return articles;
   }
