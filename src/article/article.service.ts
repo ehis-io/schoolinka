@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleRepository } from './repository/article.repository';
@@ -6,21 +6,37 @@ import { ArticleRepository } from './repository/article.repository';
 @Injectable()
 export class ArticleService {
   constructor(private articleRepository: ArticleRepository) {}
+  logger = new Logger(ArticleService.name);
   async create(createArticleDto: CreateArticleDto) {
-    return await this.articleRepository.createArticle(createArticleDto);
+    try {
+      return await this.articleRepository.createArticle(createArticleDto);
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   async findAll(take?: number, skip?: number) {
-    if (take == null || undefined) {
-      take = 20;
-      skip = 0;
+    try {
+      if (take == null || undefined) {
+        take = 20;
+        skip = 0;
+      }
+
+      return await this.articleRepository.findAll(take, skip);
+    } catch (error) {
+      this.logger.error(error);
     }
-    console.log(take, skip);
-    return await this.articleRepository.findAll(take, skip);
   }
 
   async findOne(id: string) {
-    return await this.articleRepository.findArticle(id);
+    try {
+      const data = await this.articleRepository.findArticle(id);
+      if (data == null) {
+        throw new NotFoundException();
+      }
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   update(id: String, updateArticleDto: UpdateArticleDto) {
